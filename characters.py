@@ -36,3 +36,28 @@ class Character():
         self.__stun = 0
         self.__stunned = False
         ###
+        
+    def get_controlled_by(self):
+        return self.__controlled_by
+    
+    def get_size(self):
+        return self.__heigh, self.__width
+
+    def get_max_hit_points(self):
+        return self.__max_hit_points
+
+    def get_hit_points(self):
+        return self.__hit_points
+
+    def get_max_stamina(self):
+        return self.__max_stamina
+
+    def get_stamina(self):
+        return self.__stamina
+
+    def get_speed(self):
+        return self.__speed
+    
+    def get_stunned(self):
+        return self.__stunned
+    
