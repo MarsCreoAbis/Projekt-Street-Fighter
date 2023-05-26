@@ -1,5 +1,18 @@
+import pygame
 
-class Character():
+
+class Movable(): # Nie jestem pewien co do potrzeby tej klasy, ale na razie jest
+    def __init__(self, x, y):
+        self.__position_x, self.__position_y = x, y
+
+    def move(self, horizontal, vertical = 0):
+        self.__position_x += horizontal
+        self.__position_y += vertical
+    
+    def get_position(self):
+        return (self.__position_x, self.__position_y)
+
+class Character(Movable):
         ### Tworzenie postaci
     def __init__(self, hp, stamina, speed , size, sprite, player):
         
@@ -9,15 +22,15 @@ class Character():
         
         ### Ustawia początkową pozycję postaci, wartości tymczasowe zmienię jak będzie już zrobione środowisko gry
         if self.__controlled_by == 0:
-            self.position = [15,0]
-        else:
-            self.position = [31, 0]
+            super().__init__((16,64))
+        elif self.__controlled_by == 1:
+            super().__init__((64,64))
         ###
         
-        ### Ta część będzie wyznaczać hitboxy postaci, póki co jeszcze nie zdefiniowane
+        ### Ta część wyznacza hitboxy postaci
         self.__heigh, self.__width = size, size/2
-        #self.upper_hitbox = Hitbox(self.heigh, self.width)
-        #self.lower_hitbox = Hitbox(self.heigh, self.width)
+        self.upper_hitbox = pygame.Rect(self.get_position()[0],self.get_position()[1],self.__width, self.__heigh)
+        self.lower_hitbox = pygame.Rect(self.get_position()[0], self.get_position()[1] + self.__heigh, self.__width, self.__heigh)
         ###            
             
         ### Ta część ustawia makysmalne i początkowe statystyki postaci
@@ -60,4 +73,8 @@ class Character():
     
     def get_stunned(self):
         return self.__stunned
-    
+
+    def move(self, x, y = 0):
+        super().move(x,y)
+        self.lower_hitbox.move(x,y)
+        self.upper_hitbox.move(x,y)
