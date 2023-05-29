@@ -44,7 +44,7 @@ class Character(Movable):
         ### Ustawia grafikę postaci
         self.__sprite = pygame.image.load(sprite)
         if self.__controlled_by == 1:
-            self.__sprite = pygame.transform.flip(self.__sprite, 0, 1)
+            self.__sprite = pygame.transform.flip(self.__sprite, 1, 0)
         ###
 
         ### Tu będą różna potencjalne, stany postaci
