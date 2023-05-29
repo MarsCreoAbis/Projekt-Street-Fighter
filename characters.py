@@ -22,9 +22,9 @@ class Character(Movable):
         
         ### Ustawia początkową pozycję postaci, wartości tymczasowe zmienię jak będzie już zrobione środowisko gry
         if self.__controlled_by == 0:
-            super().__init__(360,660 - size)
+            super().__init__(425, 576)
         elif self.__controlled_by == 1:
-            super().__init__(920, 660 - size)
+            super().__init__(850, 576)
         ###
         
         ### Ta część wyznacza hitboxy postaci
