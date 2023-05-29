@@ -42,7 +42,7 @@ class Character(Movable):
         ###
         
         ### Będzie przypisywać konkretną grafikę psotaci, póki co nie robi nic
-        self.__sprite = sprite
+        self.__sprite = pygame.image.load(sprite)
         ###
 
         ### Tu będą różna potencjalne, stany postaci
