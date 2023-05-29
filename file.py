@@ -8,8 +8,8 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 
-ch1 = Character(100, 100, 10, 3, "placeholder.png", 0)
-ch2 = Character(100, 100, 10, 4, "placeholder.png", 1)
+ch1 = Character(100, 100, 10, 75, "placeholder.png", 0)
+ch2 = Character(100, 100, 10, 100, "placeholder.png", 1)
 gray = (128, 128, 128)
 red = (128, 0, 0)
 # pasek z zyciem
