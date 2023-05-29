@@ -43,6 +43,7 @@ class Character(Movable):
         
         ### Ustawia grafikę postaci
         self.__sprite = pygame.image.load(sprite)
+        self.__sprite = pygame.transform.scale(self.__sprite,(self.__width, self.__heigh))
         if self.__controlled_by == 1:
             self.__sprite = pygame.transform.flip(self.__sprite, 1, 0)
         ###
