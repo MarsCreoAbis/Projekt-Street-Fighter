@@ -22,15 +22,15 @@ class Character(Movable):
         
         ### Ustawia początkową pozycję postaci, wartości tymczasowe zmienię jak będzie już zrobione środowisko gry
         if self.__controlled_by == 0:
-            super().__init__(360,520)
+            super().__init__(360,660 - size)
         elif self.__controlled_by == 1:
-            super().__init__(920, 520)
+            super().__init__(920, 660 - size)
         ###
         
         ### Ta część wyznacza hitboxy postaci
         self.__heigh, self.__width = size, size/2
-        self.upper_hitbox = pygame.Rect(self.get_position()[0],self.get_position()[1],self.__width, self.__heigh)
-        self.lower_hitbox = pygame.Rect(self.get_position()[0], self.get_position()[1] + self.__heigh, self.__width, self.__heigh)
+        self.upper_hitbox = pygame.Rect(self.get_position()[0],self.get_position()[1],self.__width, self.__heigh/2)
+        self.lower_hitbox = pygame.Rect(self.get_position()[0], self.get_position()[1] + self.__heigh, self.__width, self.__heigh/2)
         ###            
             
         ### Ta część ustawia makysmalne i początkowe statystyki postaci
