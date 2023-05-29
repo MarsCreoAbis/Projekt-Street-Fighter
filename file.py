@@ -8,8 +8,8 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 
-ch1 = Character(100, 100, 10, 3, "", 0)
-ch2 = Character(100, 100, 10, 4, "", 1)
+ch1 = Character(100, 100, 10, 3, "placeholder.png", 0)
+ch2 = Character(100, 100, 10, 4, "placeholder.png", 1)
 
 while running:
     for event in pygame.event.get():
