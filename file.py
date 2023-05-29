@@ -18,10 +18,11 @@ while running:
 
     screen.fill("purple")
     bg = pygame.image.load("bg.jpg")
+    bg = pygame.transform.scale(bg,(1280, 720))
     screen.blit(bg, (0, 0))
 
-    pygame.draw.circle(screen, "red", pygame.Vector2(ch1.get_position()), 40)
-    pygame.draw.circle(screen, "purple", pygame.Vector2(ch2.get_position()), 40)
+    screen.blit(ch1.get_sprite(), (ch1.get_position()))
+    screen.blit(ch2.get_sprite(), (ch2.get_position()))
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
