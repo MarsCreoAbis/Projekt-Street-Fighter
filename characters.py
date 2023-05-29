@@ -41,8 +41,10 @@ class Character(Movable):
         self.__speed = speed ### 
         ###
         
-        ### Będzie przypisywać konkretną grafikę psotaci, póki co nie robi nic
+        ### Ustawia grafikę postaci
         self.__sprite = pygame.image.load(sprite)
+        if self.self.__controlled_by == 1:
+            self.__sprite = pygame.transform.flip(self.__sprite, 0, 1)
         ###
 
         ### Tu będą różna potencjalne, stany postaci
@@ -68,12 +70,18 @@ class Character(Movable):
     def get_stamina(self):
         return self.__stamina
 
+    def get_sprite(self):
+        return self.__sprite
+    
     def get_speed(self):
         return self.__speed
     
     def get_stunned(self):
         return self.__stunned
 
+    def get_sprite(self):
+        return self.__sprite
+        
     def move(self, x, y = 0):
         super().move(x,y)
         self.lower_hitbox.move(x,y)
