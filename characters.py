@@ -22,9 +22,9 @@ class Character(Movable):
         
         ### Ustawia początkową pozycję postaci, wartości tymczasowe zmienię jak będzie już zrobione środowisko gry
         if self.__controlled_by == 0:
-            super().__init__((16,64))
+            super().__init__(360,520)
         elif self.__controlled_by == 1:
-            super().__init__((64,64))
+            super().__init__(920, 520)
         ###
         
         ### Ta część wyznacza hitboxy postaci
@@ -42,7 +42,7 @@ class Character(Movable):
         ###
         
         ### Będzie przypisywać konkretną grafikę psotaci, póki co nie robi nic
-        self.__sprite = sprite
+        self.__sprite = pygame.image.load(sprite)
         ###
 
         ### Tu będą różna potencjalne, stany postaci
