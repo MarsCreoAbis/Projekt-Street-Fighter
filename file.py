@@ -1,6 +1,7 @@
 
 import pygame
 from  characters import *
+from gui import Healtbar
 
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
@@ -12,13 +13,16 @@ ch1 = Character(100, 100, 10, 75, "placeholder.png", 0)
 ch2 = Character(100, 100, 10, 100, "placeholder.png", 1)
 gray = (128, 128, 128)
 red = (128, 0, 0)
+
+############################################
+
+healtbar_1 = Healtbar(ch1.get_max_hit_points(), 50, 50)
+healtbar_2 = Healtbar(ch2.get_max_hit_points(), 880, 50)
+
+
+#############################################
 # pasek z zyciem
-rectangle_width = int(1280 * 0.45)
-rectangle_height = 50
-rectangle_x = int(1280 * 0.03)
-rectangle_y = int(720 * 0.05)
-rectangle_x_2 = int(1280 * 0.97 - (1280 * 0.45))
-rectangle_y_2 = int(720 * 0.05)
+
 button_color = (0, 255, 0)
 
 font = pygame.font.Font(None, 36)
@@ -34,10 +38,19 @@ while running:
 
     screen.blit(ch1.get_sprite(), (ch1.get_position()))
     screen.blit(ch2.get_sprite(), (ch2.get_position()))
-    pygame.draw.rect(screen, gray, (rectangle_x, rectangle_y, rectangle_width, rectangle_height))
-    pygame.draw.rect(screen, gray, (rectangle_x_2, rectangle_y_2, rectangle_width, rectangle_height))
-    pygame.draw.rect(screen, red, (rectangle_x, rectangle_y, rectangle_width*(ch1.get_hit_points()/ch1.get_max_hit_points()), rectangle_height))
-    pygame.draw.rect(screen, red, (rectangle_x_2, rectangle_y_2, rectangle_width*(ch2.get_hit_points()/ch2.get_max_hit_points()), rectangle_height))
+
+#######################################################
+# wyzywa sie metoda update, ktora odpowiada za zycie gracza
+    healtbar_1.update(ch1.get_hit_points())
+    healtbar_1.update(ch2.get_hit_points())
+
+# tworzy sie pasek z zyciem gracza
+    healtbar_1.draw_healthbar(screen)
+    healtbar_2.draw_healthbar(screen)
+
+#######################################################
+
+
     if min(ch1.get_hit_points(), ch2.get_hit_points()) <= 0:
         # "Koniec gry"
         end_game_text = font.render("Koniec gry", True, (255, 0, 0))
