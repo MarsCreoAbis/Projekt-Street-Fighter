@@ -16,8 +16,8 @@ red = (128, 0, 0)
 
 ############################################
 
-healtbar_1 = Healtbar(ch1.get_max_hit_points(), 50, 50)
-healtbar_2 = Healtbar(ch2.get_max_hit_points(), 880, 50)
+healtbar_1 = Healtbar(ch1.get_max_hit_points(), 50, 50, "player_1")
+healtbar_2 = Healtbar(ch2.get_max_hit_points(), 880, 50, "player_2")
 
 
 #############################################
@@ -31,7 +31,6 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    screen.fill("purple")
     bg = pygame.image.load("bg.jpg")
     bg = pygame.transform.scale(bg,(1280, 720))
     screen.blit(bg, (0, 0))
