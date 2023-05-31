@@ -48,7 +48,7 @@ while running:
 #######################################################
 # wyzywa sie metoda update, ktora odpowiada za zycie gracza
     healtbar_1.update(ch1.get_hit_points())
-    healtbar_1.update(ch2.get_hit_points())
+    healtbar_2.update(ch2.get_hit_points())
 
 # tworzy sie pasek z zyciem gracza
     healtbar_1.draw_healthbar(screen)
