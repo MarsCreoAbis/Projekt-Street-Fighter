@@ -9,6 +9,8 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 
+debugging = False
+
 ch1 = Character(100, 100, 10, 75, "placeholder.png", 0)
 ch2 = Character(100, 100, 10, 100, "placeholder.png", 1)
 gray = (128, 128, 128)
@@ -37,6 +39,11 @@ while running:
 
     screen.blit(ch1.get_sprite(), (ch1.get_position()))
     screen.blit(ch2.get_sprite(), (ch2.get_position()))
+    
+    ### Wyświetla hiboxy postaci
+    if debugging:
+        for box in [ch1.upper_hitbox,ch1.lower_hitbox,ch2.upper_hitbox,ch2.lower_hitbox]:
+            pygame.draw.rect(screen,(0,255,0),box)
 
 #######################################################
 # wyzywa sie metoda update, ktora odpowiada za zycie gracza
@@ -69,27 +76,28 @@ while running:
             ch1._Character__hit_points = ch1.get_max_hit_points() 
     else:
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_w]:
-            ch1.move(0,-300 * dt)
-        if keys[pygame.K_s]:
-            ch1.move(0,300 * dt)
+        if keys[pygame.K_w] and ch1.Grounded():
+            ch1.Jump()
+        if keys[pygame.K_s] and ch1.Grounded():
+            ch1.crouch()
         if keys[pygame.K_a]:
             ch1.move(-300 * dt, 0)
         if keys[pygame.K_d]:
             ch1.move(300 * dt, 0)
         if keys[pygame.K_q]:
             ch1._Character__hit_points -= 5
-        if keys[pygame.K_i]:
-            ch2.move(0, -300 * dt)
-        if keys[pygame.K_k]:
-            ch2.move(0, 300 * dt)
+        if keys[pygame.K_i] and ch2.Grounded():
+            ch2.Jump()
+        if keys[pygame.K_k] and ch2.Grounded():
+            ch2.crouch()
         if keys[pygame.K_j]:
             ch2.move(-300 * dt, 0)
         if keys[pygame.K_l]:
             ch2.move(300 * dt, 0)
         if keys[pygame.K_u]:
             ch2._Character__hit_points -= 5       
-
+        ch1.adjust(dt,ch2.get_position()[0])
+        ch2.adjust(dt,ch1.get_position()[0]) 
   
     pygame.display.flip()
 
