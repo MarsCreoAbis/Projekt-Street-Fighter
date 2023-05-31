@@ -88,8 +88,8 @@ class Character(Movable):
         
     def move(self, x, y = 0):
         super().move(x,y)
-        self.lower_hitbox.move(x,y)
-        self.upper_hitbox.move(x,y)
+        self.lower_hitbox = self.lower_hitbox.move(x,y)
+        self.upper_hitbox = self.upper_hitbox.move(x,y)
     
     ### Sprawdza w dość prymitwyny spośob, czy postać dotyka ziemi
     def Grounded(self):
