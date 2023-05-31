@@ -32,7 +32,7 @@ class Character(Movable):
         ### Ta część wyznacza hitboxy postaci
         self.__heigh, self.__width = size, size/2
         self.upper_hitbox = pygame.Rect(self.get_position()[0],self.get_position()[1],self.__width, self.__heigh/2)
-        self.lower_hitbox = pygame.Rect(self.get_position()[0], self.get_position()[1] + self.__heigh, self.__width, self.__heigh/2)
+        self.lower_hitbox = pygame.Rect(self.get_position()[0], self.get_position()[1] + self.__heigh/2, self.__width, self.__heigh/2)
         ###            
             
         ### Ta część ustawia makysmalne i początkowe statystyki postaci
