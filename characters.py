@@ -23,8 +23,10 @@ class Character(Movable):
         ### Ustawia początkową pozycję postaci, wartości tymczasowe zmienię jak będzie już zrobione środowisko gry
         if self.__controlled_by == 0:
             super().__init__(425, 666-size)
+            self.__facing = 'right'
         elif self.__controlled_by == 1:
             super().__init__(850, 666-size)
+            self.__facing = 'left'
         ###
         
         ### Ta część wyznacza hitboxy postaci
@@ -50,7 +52,8 @@ class Character(Movable):
 
         ### Tu będą różna potencjalne, stany postaci
         self.__stun = 0
-        self.__stunned = False
+        self.__jumping = 0
+        self.__crouching = 0
         ###
         
     def get_controlled_by(self):
@@ -78,7 +81,7 @@ class Character(Movable):
         return self.__speed
     
     def get_stunned(self):
-        return self.__stunned
+        return self.__stun
 
     def get_sprite(self):
         return self.__sprite
@@ -87,3 +90,44 @@ class Character(Movable):
         super().move(x,y)
         self.lower_hitbox.move(x,y)
         self.upper_hitbox.move(x,y)
+    
+    ### Sprawdza w dość prymitwyny spośob, czy postać dotyka ziemi
+    def Grounded(self):
+        if self.get_position()[1] >= 666 - self.__heigh:
+            return True
+        else:
+            return False
+    
+    def Jump(self):
+        self.__jumping = 8
+        self.lower_hitbox = self.lower_hitbox.move(0, - self.__heigh/4)
+
+    def crouch(self):
+        if not self.__crouching:
+            self.upper_hitbox = self.upper_hitbox.move(0, self.__heigh/2)
+        self.__crouching = 2
+    
+    ### Ustawia pozycje postaci i przemieszcza je zgodnie z grawitacją
+    def adjust(self,dt, facing):
+        if self.__jumping:
+            self.move(0,- self.__jumping * 100 * dt)
+            self.__jumping -= 1
+            if self.__jumping == 0:
+                self.upper_hitbox = pygame.Rect(self.get_position()[0],self.get_position()[1],self.__width, self.__heigh/2)
+                self.lower_hitbox = pygame.Rect(self.get_position()[0], self.get_position()[1] + self.__heigh/2, self.__width, self.__heigh/2)
+        elif not self.Grounded():
+            self.move(0, 300*dt)
+       
+        if self.__crouching:
+            self.__crouching -= 1
+            if not self.__crouching:
+                self.upper_hitbox = self.upper_hitbox.move(0, - self.__heigh/2)
+       
+        temp = self.__facing
+        if facing > self.get_position()[0]:
+            self.__facing =   'right'
+        else:
+            self.__facing = 'left'
+        if temp != self.__facing:
+            self.__sprite = pygame.transform.flip(self.__sprite, 1, 0)
+            
