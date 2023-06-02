@@ -33,6 +33,8 @@ class Character(Movable):
         self.__heigh, self.__width = size, size/2
         self.upper_hitbox = pygame.Rect(self.get_position()[0],self.get_position()[1],self.__width, self.__heigh/2)
         self.lower_hitbox = pygame.Rect(self.get_position()[0], self.get_position()[1] + self.__heigh/2, self.__width, self.__heigh/2)
+        self.hitboxes = [self.upper_hitbox, self.lower_hitbox]
+        self.attacks = []
         ###            
             
         ### Ta część ustawia makysmalne i początkowe statystyki postaci
@@ -52,6 +54,7 @@ class Character(Movable):
 
         ### Tu będą różna potencjalne, stany postaci
         self.__stun = 0
+        self.__attacking = 0
         self.__jumping = 0
         self.__crouching = 0
         ###
@@ -81,12 +84,24 @@ class Character(Movable):
         return self.__speed
     
     def get_stunned(self):
-        return self.__stun
+        if self.__stun > 0:
+            return True
+        else:
+            return False
 
     def get_sprite(self):
         return self.__sprite
         
     def move(self, x, y = 0):
+        x = int(x)
+        y = int(y)
+        if self.get_position()[1] + y > 666 - self.__heigh:
+            y = 666 - self.__heigh - self.get_position()[1]
+        if x < 0:
+            if self.get_position()[0] < -x:
+                x = -self.get_position()[0]
+        elif x + self.get_position()[0] + self.__width > 1280:
+            x = 1280 - self.get_position()[0] - self.__width
         super().move(x,y)
         self.lower_hitbox = self.lower_hitbox.move(x,y)
         self.upper_hitbox = self.upper_hitbox.move(x,y)
@@ -109,6 +124,7 @@ class Character(Movable):
     
     ### Ustawia pozycje postaci i przemieszcza je zgodnie z grawitacją
     def adjust(self,dt, facing):
+        self.__stun -= 1
         if self.__jumping:
             self.move(0,- self.__jumping * 100 * dt)
             self.__jumping -= 1
@@ -117,7 +133,7 @@ class Character(Movable):
                 self.lower_hitbox = pygame.Rect(self.get_position()[0], self.get_position()[1] + self.__heigh/2, self.__width, self.__heigh/2)
         elif not self.Grounded():
             self.move(0, 300*dt)
-       
+        
         if self.__crouching:
             self.__crouching -= 1
             if not self.__crouching:
@@ -130,4 +146,44 @@ class Character(Movable):
             self.__facing = 'left'
         if temp != self.__facing:
             self.__sprite = pygame.transform.flip(self.__sprite, 1, 0)
-            
+        if self.__attacking:
+            self.__attacking -= 1
+            if not self.__attacking:
+                self.attacks = []
+        self.hitboxes = [self.upper_hitbox, self.lower_hitbox]
+    
+    
+    ### Zadaje postaci knockback i obrażenia
+    def hit(self, damage, knockback = 0):
+        self.__hit_points -= damage
+        if self.__facing == 'right':
+            self.move(-knockback,-knockback)
+        else:
+            self.move(knockback,knockback)
+#######
+##Miejsce na metody ataków
+    def basic_kick(self):
+        position = self.lower_hitbox.center
+        position = list(position)
+        self.__stun = 15 - self.__speed
+        self.__attacking = 15 - self.__speed
+        if self.__facing == 'right':
+            position[0] = position[0] + int(self.__width/2+10)
+            kick = pygame.Rect(position[0],position[1] , 30, 15)
+        else:
+            position[0] = position[0] - int(self.__width/2+10)
+            kick = pygame.Rect(position[0]-30,position[1], 30, 15)
+        self.attacks.append(kick)
+        
+    def basic_punch(self):
+        position = self.upper_hitbox.center
+        position = list(position)
+        self.__stun = 15 - self.__speed
+        self.__attacking = 15 - self.__speed
+        if self.__facing == 'right':
+            position[0] = position[0] + int(self.__width/2+10)
+            punch = pygame.Rect(position[0],position[1] , 30, 15)
+        else:
+            position[0] = position[0] - int(self.__width/2+10)
+            punch = pygame.Rect(position[0]-30,position[1], 30, 15)
+        self.attacks.append(punch)
