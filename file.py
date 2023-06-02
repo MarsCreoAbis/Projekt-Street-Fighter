@@ -42,8 +42,11 @@ while running:
     
     ### Wyświetla hiboxy postaci
     if debugging:
-        for box in [ch1.upper_hitbox,ch1.lower_hitbox,ch2.upper_hitbox,ch2.lower_hitbox]:
+        for box in ch1.get_hitobxes() + ch2.get_hitobxes():
             pygame.draw.rect(screen,(0,255,0),box)
+
+        for attack in ch1.attacks + ch2.attacks:
+            pygame.draw.rect(screen,(255,0,0),attack)
 
 #######################################################
 # wyzywa sie metoda update, ktora odpowiada za zycie gracza
@@ -76,26 +79,57 @@ while running:
             ch1._Character__hit_points = ch1.get_max_hit_points() 
     else:
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_w] and ch1.Grounded():
-            ch1.Jump()
+        if not ch1.get_stunned():
+            if keys[pygame.K_w] and ch1.Grounded():
+                ch1.Jump()
+            if keys[pygame.K_a]:
+                ch1.move(-300 * dt, 0)
+            if keys[pygame.K_d]:
+                ch1.move(300 * dt, 0)
+            if keys[pygame.K_c]:
+                ch1.basic_kick()
+            if keys[pygame.K_x]:
+                ch1.basic_punch()
         if keys[pygame.K_s] and ch1.Grounded():
-            ch1.crouch()
-        if keys[pygame.K_a]:
-            ch1.move(-300 * dt, 0)
-        if keys[pygame.K_d]:
-            ch1.move(300 * dt, 0)
-        if keys[pygame.K_q]:
-            ch1._Character__hit_points -= 5
-        if keys[pygame.K_i] and ch2.Grounded():
-            ch2.Jump()
+                ch1.crouch()
+
+        if not ch2.get_stunned():
+            if keys[pygame.K_q]:
+                ch1._Character__hit_points -= 5
+            if keys[pygame.K_i] and ch2.Grounded():
+                ch2.Jump()
+            if keys[pygame.K_j]:
+                ch2.move(-300 * dt, 0)
+            if keys[pygame.K_l]:
+                ch2.move(300 * dt, 0)
+            if keys[pygame.K_n]:
+                ch2.basic_kick()
+            if keys[pygame.K_m]:
+                ch2.basic_punch()
         if keys[pygame.K_k] and ch2.Grounded():
-            ch2.crouch()
-        if keys[pygame.K_j]:
-            ch2.move(-300 * dt, 0)
-        if keys[pygame.K_l]:
-            ch2.move(300 * dt, 0)
-        if keys[pygame.K_u]:
-            ch2._Character__hit_points -= 5       
+                ch2.crouch()
+
+#### Sprawdzenie kolizji ataków z graczami                
+#############################################
+        for attack in ch2.attacks[:]:
+            temp = False
+            for hitbox in ch1.hitboxes:
+                if attack.colliderect(hitbox):
+                    ch1.hit(10, 500*dt)
+                    temp =True
+            if temp:
+                ch2.attacks.remove(attack)
+
+        for attack in ch1.attacks[:]:
+            temp = False
+            for hitbox in ch2.hitboxes:
+                if attack.colliderect(hitbox):
+                    ch2.hit(10, 500*dt)
+                    temp =True
+            if temp:
+                ch1.attacks.remove(attack)
+###########################################
+
         ch1.adjust(dt,ch2.get_position()[0])
         ch2.adjust(dt,ch1.get_position()[0]) 
   
