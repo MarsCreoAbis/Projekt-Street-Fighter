@@ -1,5 +1,5 @@
 import pygame
-
+import os
 
 class Movable(): # Nie jestem pewien co do potrzeby tej klasy, ale na razie jest
     def __init__(self, x, y):
@@ -46,7 +46,7 @@ class Character(Movable):
         ###
         
         ### Ustawia grafikę postaci
-        self.__sprite = pygame.image.load(sprite)
+        self.__sprite = pygame.image.load(os.path.join('postacie',sprite))
         self.__sprite = pygame.transform.scale(self.__sprite,(self.__width, self.__heigh))
         if self.__controlled_by == 1:
             self.__sprite = pygame.transform.flip(self.__sprite, 1, 0)
@@ -187,3 +187,17 @@ class Character(Movable):
             position[0] = position[0] - int(self.__width/2+10)
             punch = pygame.Rect(position[0]-30,position[1], 30, 15)
         self.attacks.append(punch)
+        
+#### Postacie
+class Presets():
+    def __init__(self,hp, stamina, speed, size, sprite):
+        self.__hp = hp
+        self.__stamina = stamina 
+        self.__speed = speed
+        self.__size = size 
+        self.__sprite = sprite
+    def create(self):
+        return self.__hp, self.__stamina, self.__speed, self.__size, self.__sprite
+
+Liszy = Presets(200,200, 6, 80, "liszy_standing.png")
+Ninja = Presets(160,200,9,80,"ninja_standing.png")

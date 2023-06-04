@@ -11,8 +11,17 @@ dt = 0
 
 debugging = False
 
-ch1 = Character(100, 100, 10, 75, "placeholder.png", 0)
-ch2 = Character(100, 100, 10, 100, "placeholder.png", 1)
+
+
+
+### Trzeba dodać menu wyboru postaci
+choice1 = Liszy.create()
+choice2 = Ninja.create()
+
+ch1 = Character(choice1[0],choice1[1],choice1[2],choice1[3],choice1[4], 0)
+ch2 = Character(choice2[0],choice2[1],choice2[2],choice2[3],choice2[4], 1)
+
+
 gray = (128, 128, 128)
 red = (128, 0, 0)
 
@@ -40,9 +49,9 @@ while running:
     screen.blit(ch1.get_sprite(), (ch1.get_position()))
     screen.blit(ch2.get_sprite(), (ch2.get_position()))
     
-    ### Wyświetla hiboxy postaci
+    ### Wyświetla hiboxy postacis
     if debugging:
-        for box in ch1.get_hitobxes() + ch2.get_hitobxes():
+        for box in ch1.hitboxes + ch2.hitboxes:
             pygame.draw.rect(screen,(0,255,0),box)
 
         for attack in ch1.attacks + ch2.attacks:
@@ -109,8 +118,6 @@ while running:
         if keys[pygame.K_k] and ch2.Grounded():
                 ch2.crouch()
 
-#### Sprawdzenie kolizji ataków z graczami                
-#############################################
         for attack in ch2.attacks[:]:
             temp = False
             for hitbox in ch1.hitboxes:
@@ -128,7 +135,6 @@ while running:
                     temp =True
             if temp:
                 ch1.attacks.remove(attack)
-###########################################
 
         ch1.adjust(dt,ch2.get_position()[0])
         ch2.adjust(dt,ch1.get_position()[0]) 
