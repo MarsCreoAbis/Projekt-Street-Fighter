@@ -215,3 +215,4 @@ class Presets():
 Liszy = Presets(200,200, 6, 80, "liszy_standing.png")
 Ninja = Presets(160,200,9,80,"ninja_standing.png")
 Grol = Presets(300,300, 5, 100, "grol_standing.png")
+Billy = Presets(90, 60, 10, 60, "billy_standing.png")
