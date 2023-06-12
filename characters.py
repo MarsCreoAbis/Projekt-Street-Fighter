@@ -1,5 +1,6 @@
 import pygame
 import os
+from math import log
 
 class Movable(): # Nie jestem pewien co do potrzeby tej klasy, ale na razie jest
     def __init__(self, x, y):
@@ -112,8 +113,14 @@ class Character(Movable):
             return True
         else:
             return False
+        
+    def tire(self, value):
+        self.__stamina -= value
+        if self.__stamina < 0:
+            self.__stamina = 0
     
     def Jump(self):
+        self.tire(5)
         self.__jumping = 8
         self.lower_hitbox = self.lower_hitbox.move(0, - self.__heigh/4)
 
@@ -124,7 +131,11 @@ class Character(Movable):
     
     ### Ustawia pozycje postaci i przemieszcza je zgodnie z grawitacją
     def adjust(self,dt, facing):
-        self.__stun -= 1
+        if self.__stun:
+            self.__stun -= 1
+        else:
+            self.__stamina += 1
+
         if self.__jumping:
             self.move(0,- self.__jumping * 100 * dt)
             self.__jumping -= 1
@@ -155,7 +166,7 @@ class Character(Movable):
     
     ### Zadaje postaci knockback i obrażenia
     def hit(self, damage, knockback = 0):
-        self.__hit_points -= damage
+        self.__hit_points -= int(damage * log(self.__max_stamina, self.__stamina+2)) 
         if self.__facing == 'right':
             self.move(-knockback,-knockback)
         else:
@@ -167,6 +178,7 @@ class Character(Movable):
         position = list(position)
         self.__stun = 15 - self.__speed
         self.__attacking = 15 - self.__speed
+        self.tire(10)
         if self.__facing == 'right':
             position[0] = position[0] + int(self.__width/2+10)
             kick = pygame.Rect(position[0],position[1] , 30, 15)
@@ -180,6 +192,7 @@ class Character(Movable):
         position = list(position)
         self.__stun = 15 - self.__speed
         self.__attacking = 15 - self.__speed
+        self.tire(10)
         if self.__facing == 'right':
             position[0] = position[0] + int(self.__width/2+10)
             punch = pygame.Rect(position[0],position[1] , 30, 15)
@@ -201,3 +214,4 @@ class Presets():
 
 Liszy = Presets(200,200, 6, 80, "liszy_standing.png")
 Ninja = Presets(160,200,9,80,"ninja_standing.png")
+Grol = Presets(300,300, 5, 100, "grol_standing.png")
