@@ -26,9 +26,10 @@ gray = (128, 128, 128)
 red = (128, 0, 0)
 
 ############################################
+# tu sie tworza obiekty
 
-healtbar_1 = Healtbar(ch1.get_max_hit_points(), 50, 50, "player_1")
-healtbar_2 = Healtbar(ch2.get_max_hit_points(), 880, 50, "player_2")
+healtbar_1 = Healtbar(ch1.get_max_hit_points(), 50, 50, "player_1", "player_1.jpg")
+healtbar_2 = Healtbar(ch2.get_max_hit_points(), 880, 50, "player_2","player_2.jpg")
 
 
 #############################################
