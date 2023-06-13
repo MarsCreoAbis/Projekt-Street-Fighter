@@ -79,6 +79,7 @@ healtbar_2 = Healtbar(ch2.get_max_hit_points(), 880, 50, "player_2","player_2.jp
 button_color = (0, 255, 0)
 
 font = pygame.font.Font(None, 36)
+round = GameRound(ch1, ch2)
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
