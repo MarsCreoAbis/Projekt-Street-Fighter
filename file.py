@@ -49,7 +49,7 @@ running = True
 # ta zmienna powinna się zmienić na True, w momencie startu rundy
 game_started = False
 dt = 0
-
+debugging = False
 
 
 
