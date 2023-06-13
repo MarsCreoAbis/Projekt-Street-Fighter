@@ -2,14 +2,55 @@
 import pygame
 from  characters import *
 from gui import Healtbar
+import time
 
+class GameRound():
+    def __init__(self, ch1, ch2):
+        self.points_p1 = self.points_p2 = 0
+        self.cycle_state_p1 = ch1._Character__hit_points
+        self.cycle_state_p2 = ch2._Character__hit_points
+        self.last_hit_time_p1 = None
+        self.last_hit_time_p2 = None
+        self.p1_combo = 0
+        self.p2_combo = 0
+        self.cycle_time = time.time()
+
+    def checkCycle(self):
+        self.cycle_time = time.time()
+        if (d := self.cycle_state_p1 - ch1._Character__hit_points) != 0:
+            self.points_p2 += 1 + int(float(f'{d}.{d}')*(0.30*self.p2_combo))
+            self.cycle_state_p1 = ch1._Character__hit_points
+            if self.last_hit_time_p2 is None:
+                self.last_hit_time_p2 = time.time()
+            time_now = time.time()
+            if time_now - self.last_hit_time_p2 < 1.7:
+                self.p2_combo +=1
+            self.last_hit_time_p2 = time_now
+        if (d := self.cycle_state_p2 - ch2._Character__hit_points) != 0:
+            self.points_p1 += 1 + int(float(f'{d}.{d}')*(0.30*self.p1_combo))
+            self.cycle_state_p2 = ch2._Character__hit_points
+            if self.last_hit_time_p1 is None:
+                self.last_hit_time_p1 = time.time()
+            time_now = time.time()
+            if time_now - self.last_hit_time_p1 < 1.7:
+                self.p1_combo +=1
+            self.last_hit_time_p1 = time_now
+        if self.p1_combo != 0:
+            if self.cycle_time - self.last_hit_time_p1 > 1.8:
+                self.p1_combo = 0
+        if self.p2_combo != 0:                
+            if self.cycle_time - self.last_hit_time_p2 > 1.8:
+                self.p2_combo = 0
+    
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 running = True
+# ta zmienna powinna się zmienić na True, w momencie startu rundy
+game_started = False
 dt = 0
 
-debugging = False
+
 
 
 
@@ -68,7 +109,19 @@ while running:
     healtbar_2.draw_healthbar(screen)
 
 #######################################################
+    # punktacja - mozna przerzucic do GUI - wszytsko sie bedzei naliczac, wystarczy zmnniejszyc hp postaci, w jakikolwiek sposób, im więcej zada na raz, tym więcej punktów dostanie
+    tekst = font.render(str(round.points_p1), True, '#ffffff')
+    screen.blit(tekst, (460, 60))
+    tekst = font.render(str(round.points_p2), True, '#ffffff')
+    screen.blit(tekst, (830, 60))
 
+    #licznik combo - mona przerzucic do GUI, wystarczy trafic przeciwnika szybicej niz 1 raz na sekunde
+    if round.p1_combo > 2:
+        tekst = font.render(str(f'COMBO: {round.p1_combo}'), True, '#ffffff')
+        screen.blit(tekst, (110, 120))
+    if round.p2_combo > 2:
+        tekst = font.render(str(f'COMBO: {round.p1_combo}'), True, '#ffffff')
+        screen.blit(tekst, (880, 120))
 
     if min(ch1.get_hit_points(), ch2.get_hit_points()) <= 0:
         # "Koniec gry"
