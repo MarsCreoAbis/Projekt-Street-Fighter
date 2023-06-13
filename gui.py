@@ -17,8 +17,8 @@ class Healtbar():
         self.image = pygame.transform.scale(self.image, (40, 40))  
 
         self.start_time = time.time()  # czas rozpoczęcia = aktualny czas
-        self.timer_duration = 60  # runda = 60 sekund, chyba wystarczy tyle
-        self.timer_expired = False  # to zeby rozumiec ze timer się zakończył
+        self.dlugosc_rundy = 60  # runda = 60 sekund, chyba wystarczy tyle
+        self.koniec_timera = False  # to zeby rozumiec ze timer się zakończył
 
         self.winner = None # tego potrzebuje zeby w koncu rundy sie pojawialo okienko z informacja kto tam wygral 
 
@@ -26,15 +26,15 @@ class Healtbar():
         self.current_health_player1 = current_health_player1
         self.current_health_player2 = current_health_player2
 
-        elapsed_time = time.time() - self.start_time
-        if elapsed_time >= self.timer_duration:
-            self.timer_expired = True
+        czas_uplyniety = time.time() - self.start_time
+        if  czas_uplyniety >= self.dlugosc_rundy:
+            self.koniec_timera = True
 
 
         # tu sprawdzam czy czas timera się skończył
-        elapsed_time = time.time() - self.start_time
-        if elapsed_time >= self.timer_duration:
-            self.timer_expired = True
+        czas_uplyniety = time.time() - self.start_time
+        if  czas_uplyniety >= self.dlugosc_rundy:
+            self.koniec_timera = True
 
 
             # chyba wygrywa ten, kto ma wiecej zdrowia na koniec rundy
@@ -58,7 +58,7 @@ class Healtbar():
         render = font.render(self.text, True, (0,0,0))
         screen.blit(render,(self.x,self.y-35))
 
-        if self.timer_expired and self.winner:
+        if self.koniec_timera and self.winner:
         # ta czesc dla wyswietlania wynikow
             wynik_text = f"{self.winner} wygrał!"
             wynik_font = pygame.font.Font('freesansbold.ttf', 40)
@@ -68,17 +68,21 @@ class Healtbar():
             pygame.draw.rect(screen, (255, 0, 0), wynik_rect)
             screen.blit(wynik_render, wynik_rect.topleft)
 
-        # Wyświetlanie pozostałego czasu timera
-        font = pygame.font.Font('freesansbold.ttf', 32)
-        elapsed_time = time.time() - self.start_time
-        remaining_time = max(0, self.timer_duration - elapsed_time)  # Pozostały czas
-        timer_text = f"Time: {int(remaining_time)}"  # Formatowanie tekstu
+        # pozycja timera
+        timer_x = (self.x + self.x + 350) // 2  # tu licze srodek healtbara 
+        timer_y = self.y + 90  # tu zadaje pozycje
+
+        # czas uplyniety
+        czas_uplyniety = time.time() - self.start_time
+        czas_pozostaly = max(0, self.dlugosc_rundy -  czas_uplyniety)
+        timer_text = f"Time: {int(czas_pozostaly)}"
         render = font.render(timer_text, True, (0, 0, 0))
-        screen.blit(render, (self.x, self.y+40))
+        timer_rect = render.get_rect(center=(timer_x, timer_y))
+        screen.blit(render, timer_rect)
 
         # Sprawdzanie, czy timer się zakończył
-        if self.timer_expired:
-            game_over_text = font.render("Time's up!", True, (255, 0, 0))
-            screen.blit(game_over_text, (self.x, self.y + 50))
+        if self.koniec_timera:
+            koniec_gry_text = font.render("Koniec gry!", True, (255, 0, 0))
+            screen.blit(koniec_gry_text, (self.x, self.y + 40))
 
     
