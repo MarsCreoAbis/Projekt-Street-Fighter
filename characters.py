@@ -47,10 +47,8 @@ class Character(Movable):
         ###
         
         ### Ustawia grafikę postaci
-        self.__sprite = pygame.image.load(os.path.join('postacie',sprite))
-        self.__sprite = pygame.transform.scale(self.__sprite,(self.__width, self.__heigh))
-        if self.__controlled_by == 1:
-            self.__sprite = pygame.transform.flip(self.__sprite, 1, 0)
+        self.__sprite_list = sprite
+        self.__sprite_id = 0
         ###
 
         ### Tu będą różna potencjalne, stany postaci
@@ -77,9 +75,6 @@ class Character(Movable):
 
     def get_stamina(self):
         return self.__stamina
-
-    def get_sprite(self):
-        return self.__sprite
     
     def get_speed(self):
         return self.__speed
@@ -91,7 +86,10 @@ class Character(Movable):
             return False
 
     def get_sprite(self):
-        return self.__sprite
+        sprite = pygame.image.load(os.path.join('postacie', self.__sprite_list[self.__sprite_id]))
+        if self.__facing == "left":
+            sprite = pygame.transform.flip(sprite,1,0)
+        return sprite
         
     def move(self, x, y = 0):
         x = int(x)
@@ -128,6 +126,7 @@ class Character(Movable):
         if not self.__crouching:
             self.upper_hitbox = self.upper_hitbox.move(0, self.__heigh/2)
         self.__crouching = 2
+        self.__sprite_id = 1
     
     ### Ustawia pozycje postaci i przemieszcza je zgodnie z grawitacją
     def adjust(self,dt, facing):
@@ -140,27 +139,27 @@ class Character(Movable):
             self.move(0,- self.__jumping * 100 * dt)
             self.__jumping -= 1
             if self.__jumping == 0:
-                self.upper_hitbox = pygame.Rect(self.get_position()[0],self.get_position()[1],self.__width, self.__heigh/2)
-                self.lower_hitbox = pygame.Rect(self.get_position()[0], self.get_position()[1] + self.__heigh/2, self.__width, self.__heigh/2)
+                self.lower_hitbox = self.lower_hitbox.move(0, self.__heigh/4)
         elif not self.Grounded():
             self.move(0, 300*dt)
+
         
         if self.__crouching:
             self.__crouching -= 1
             if not self.__crouching:
                 self.upper_hitbox = self.upper_hitbox.move(0, - self.__heigh/2)
-       
-        temp = self.__facing
+                self.__sprite_id = 0
+        
         if facing > self.get_position()[0]:
             self.__facing =   'right'
         else:
             self.__facing = 'left'
-        if temp != self.__facing:
-            self.__sprite = pygame.transform.flip(self.__sprite, 1, 0)
+        
         if self.__attacking:
             self.__attacking -= 1
             if not self.__attacking:
                 self.attacks = []
+                self.__sprite_id = 0
         self.hitboxes = [self.upper_hitbox, self.lower_hitbox]
     
     
@@ -186,7 +185,8 @@ class Character(Movable):
             position[0] = position[0] - int(self.__width/2+10)
             kick = pygame.Rect(position[0]-30,position[1], 30, 15)
         self.attacks.append(kick)
-        
+        self.__sprite_id = 3
+    
     def basic_punch(self):
         position = self.upper_hitbox.center
         position = list(position)
@@ -200,7 +200,8 @@ class Character(Movable):
             position[0] = position[0] - int(self.__width/2+10)
             punch = pygame.Rect(position[0]-30,position[1], 30, 15)
         self.attacks.append(punch)
-        
+        self.__sprite_id = 2
+
 #### Postacie
 class Presets():
     def __init__(self,hp, stamina, speed, size, sprite):
@@ -212,7 +213,7 @@ class Presets():
     def create(self):
         return self.__hp, self.__stamina, self.__speed, self.__size, self.__sprite
 
-Liszy = Presets(200,200, 6, 80, "liszy_standing.png")
-Ninja = Presets(160,200,9,80,"ninja_standing.png")
-Grol = Presets(300,300, 5, 100, "grol_standing.png")
-Billy = Presets(90, 60, 10, 60, "billy_standing.png")
+Liszy = Presets(200,200, 6, 80, ["liszy_standing.png", 'liszy_crouch.png', 'liszy_punch.png','liszy_kick.png'])
+Ninja = Presets(160,200,9,80,["ninja_standing.png", 'ninja_crouch.png', 'ninja_punch.png','ninja_kick.png'])
+Grol = Presets(300,300, 5, 100, ["grol_standing.png", 'grol_crouch.png', 'grol_punch.png','grol_kick.png'])
+Billy = Presets(90, 60, 10, 60, ["billy_standing.png", 'billy_crouch.png', 'billy_punch.png','billy_kick.png'])
