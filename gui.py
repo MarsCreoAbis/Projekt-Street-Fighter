@@ -47,7 +47,7 @@ class interfejs():
         self.max_health_player1 = player1_max
         self.max_health_player2 = player2_max
         self.start_time = time.time()  # czas rozpoczęcia = aktualny czas
-        self.dlugosc_rundy = 10  # runda = 60 sekund, chyba wystarczy tyle
+        self.dlugosc_rundy = 60  # runda = 60 sekund, chyba wystarczy tyle
         self.koniec_timera = False  # to zeby rozumiec ze timer się zakończył
         self.winner = None # tego potrzebuje zeby w koncu rundy sie pojawialo okienko z informacja kto tam wygral 
         #self.pokaz_opcje = False  # to ma sie zmienic na True kiedy timer sie skonczy, dla wyswirtlania opcji
