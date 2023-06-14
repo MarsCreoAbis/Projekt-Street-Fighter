@@ -165,7 +165,9 @@ class Character(Movable):
     
     ### Zadaje postaci knockback i obrażenia
     def hit(self, damage, knockback = 0):
-        self.__hit_points -= int(damage * log(self.__max_stamina, self.__stamina+2)) 
+        self.__hit_points -= int(damage * log(self.__max_stamina, self.__stamina+2))
+        if self.__hit_points < 0:
+            self.__hit_points = 0 
         if self.__facing == 'right':
             self.move(-knockback,-knockback)
         else:
