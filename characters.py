@@ -86,7 +86,7 @@ class Character(Movable):
             return False
 
     def get_sprite(self):
-        sprite = pygame.image.load(os.path.join('postacie', self.__sprite_list[self.__sprite_id]))
+        sprite = pygame.image.load(os.path.join('postacie', self.__sprite_list[self.__sprite_id])) ### użycie modułu os zaczerpnięte z https://youtu.be/jO6qQDNa2UY
         if self.__facing == "left":
             sprite = pygame.transform.flip(sprite,1,0)
         return sprite
