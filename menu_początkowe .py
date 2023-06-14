@@ -1,3 +1,7 @@
+#podczas tworzenia kodu korzystałam z kodu oraz wskazówek Coding With Russ ,,How to Create a Menu in Pygame" oraz plik, który nazywa się Button pochodzi w całości od niego i jedynie usunełam fragmenty, które nie były potrzebne do mojego menu
+#kod jest ten sam w menu_początkowy, menu_pausa i menu_koncowe
+#wszystkie zdjecia pobrałam z https://pixelartmaker.com/, oprócz zdjecia backgroundu, które pobrałam stąd z githuba
+#oraz zdjecie czarnego kwadratu, które jest w menu_pausa oraz menu_koncowe pochodzi ze strony http://profilki.pl/pliki/kursory/244-czarny-kwadrat
 import pygame
 import button
 
@@ -38,3 +42,4 @@ while run:
     pygame.display.update()
 
 pygame.quit()
+
