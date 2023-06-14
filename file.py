@@ -177,6 +177,7 @@ while running:
                 ch2.basic_punch()
         if keys[pygame.K_k] and ch2.Grounded():
                 ch2.crouch()
+        #przy pomocy biblioteki pythona
 
         for attack in ch2.attacks[:]:
             temp = False
