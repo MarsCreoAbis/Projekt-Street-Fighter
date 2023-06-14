@@ -24,7 +24,7 @@ while run:
     screen.fill((1,1,20))
     screen.blit(background_img,(0,0))
     if game==True:
-        pass
+        import file
     if start_button.draw(screen):
         menu_state = "main"
 
