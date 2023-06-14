@@ -87,7 +87,7 @@ class interfejs():
             screen.blit(wynik_render, wynik_rect.topleft)
 
 
-            # wyswietlanie opcji nowa gra i wyjsc kiedy timer sie skonczy
+            # wyswietlanie opcji nowa gra i wyjsc kiedy timer sie skonczy ****** not my code, bo nie zdazylam ******
             option_font = pygame.font.Font('freesansbold.ttf', 24)
             option_text_1 = "1. Nowa gra"
             option_text_2 = "2. Wyjscie"
@@ -97,7 +97,7 @@ class interfejs():
             option_rect_2 = option_render_2.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2 + 80))
             screen.blit(option_render_1, option_rect_1.topleft)
             screen.blit(option_render_2, option_rect_2.topleft)
-            # ta czesc dla wyswietlania wynikow
+           
 
         else:
             # pozycja timera
