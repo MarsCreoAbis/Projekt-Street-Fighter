@@ -2,6 +2,8 @@ import pygame
 import os
 import time
 
+#### Podzieliłem klasę healtbar na dwie, jedna - Heltbar opsługuje wyświetlanie hp postaci, druga - timer wyświetlanie się czasu rundy i zwyciężcy 
+
 class Healtbar():
 
 
@@ -16,43 +18,15 @@ class Healtbar():
         self.image = pygame.image.load(image_path) 
         self.image = pygame.transform.scale(self.image, (40, 40))  
 
-        self.start_time = time.time()  # czas rozpoczęcia = aktualny czas
-        self.dlugosc_rundy = 60  # runda = 60 sekund, chyba wystarczy tyle
-        self.koniec_timera = False  # to zeby rozumiec ze timer się zakończył
-
-        self.winner = None # tego potrzebuje zeby w koncu rundy sie pojawialo okienko z informacja kto tam wygral 
-        #self.pokaz_opcje = False  # to ma sie zmienic na True kiedy timer sie skonczy, dla wyswirtlania opcji
-
-
-    def update(self, current_health_player1, current_health_player2):
-        self.current_health_player1 = current_health_player1
-        self.current_health_player2 = current_health_player2
-
-        czas_uplyniety = time.time() - self.start_time
-        if  czas_uplyniety >= self.dlugosc_rundy:
-            self.koniec_timera = True
-            #self.pokaz_opcje = True  # tu sie wlasnie zmienia na True
-
-
-
-        # tu sprawdzam czy czas timera się skończył
-        czas_uplyniety = time.time() - self.start_time
-        if  czas_uplyniety >= self.dlugosc_rundy:
-            self.koniec_timera = True
-
-
-            # chyba wygrywa ten, kto ma wiecej zdrowia na koniec rundy
-            if self.current_health_player1 > self.current_health_player2:
-                self.winner = "Player 1"
-            elif self.current_health_player1 < self.current_health_player2:
-                self.winner = "Player 2"
-            else:
-                self.winner = "Remis"
+        
+    def update(self, health):
+        
+        self.current_health = health
 
 
 
 
-    def draw_healthbar(self, screen):
+    def draw(self, screen):
         pygame.draw.rect(screen, (0,0,0), (self.x, self.y, 350, 40))
         pygame.draw.rect(screen, (255,0,100), (self.x+25, self.y+5, int((self.current_health*300/self.max_health)),30))
         pygame.draw.rect(screen, (0,0,0),(self.x+360, self.y, 40, 40))
@@ -62,12 +36,52 @@ class Healtbar():
         render = font.render(self.text, True, (0,0,0))
         screen.blit(render,(self.x,self.y-35))
 
-        if self.koniec_timera and self.winner:
-        # ta czesc dla wyswietlania wynikow
-            wynik_text = f"{self.winner} wygrał!"
+        
+
+    
+class interfejs():
+    
+    def __init__(self, player1_max, player2_max, position_x, position_y):
+        self.x = position_x
+        self.y = position_y
+        self.max_health_player1 = player1_max
+        self.max_health_player2 = player2_max
+        self.start_time = time.time()  # czas rozpoczęcia = aktualny czas
+        self.dlugosc_rundy = 10  # runda = 60 sekund, chyba wystarczy tyle
+        self.koniec_timera = False  # to zeby rozumiec ze timer się zakończył
+        self.winner = None # tego potrzebuje zeby w koncu rundy sie pojawialo okienko z informacja kto tam wygral 
+        #self.pokaz_opcje = False  # to ma sie zmienic na True kiedy timer sie skonczy, dla wyswirtlania opcji
+
+    def update(self, health1, health2):
+        self.current_health_player1 = health1
+        self.current_health_player2 = health2
+        # tu sprawdzam czy czas timera się skończył
+        czas_uplyniety = time.time() - self.start_time
+        if  czas_uplyniety >= self.dlugosc_rundy:
+            self.koniec_timera = True
+
+
+            # chyba wygrywa ten, kto ma wiecej zdrowia na koniec rundy
+            if self.max_health_player1//self.current_health_player1 < self.max_health_player2//self.current_health_player2:
+                self.winner = "Player 1 wygrał"
+            elif self.max_health_player1//self.current_health_player1 > self.max_health_player2//self.current_health_player2:
+                self.winner = "Player 2 wygrał"
+            else:
+                self.winner = "Remis"
+
+        if health1 == 0:
+            self.winner = "Player 2 wygrał"
+        if health2 == 0:
+            self.winner = "Player 1 wygrał"
+
+    def draw(self, screen):
+        
+        font = pygame.font.Font('freesansbold.ttf', 32)
+        if self.winner:
+            wynik_text = f"{self.winner}"
             wynik_font = pygame.font.Font('freesansbold.ttf', 40)
             wynik_render = wynik_font.render(wynik_text, True, (255, 255, 255))
-            wynik_rect = wynik_render.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
+            wynik_rect = wynik_render.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2 - 90))
             pygame.draw.rect(screen, (0, 0, 0), (wynik_rect.left - 10, wynik_rect.top - 10, wynik_rect.width + 20, wynik_rect.height + 20))
             pygame.draw.rect(screen, (255, 0, 0), wynik_rect)
             screen.blit(wynik_render, wynik_rect.topleft)
@@ -83,7 +97,7 @@ class Healtbar():
             option_rect_2 = option_render_2.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2 + 80))
             screen.blit(option_render_1, option_rect_1.topleft)
             screen.blit(option_render_2, option_rect_2.topleft)
-
+            # ta czesc dla wyswietlania wynikow
 
         else:
             # pozycja timera
@@ -102,5 +116,3 @@ class Healtbar():
             if self.koniec_timera:
                 koniec_gry_text = font.render("Czas sie skonczyl", True, (255, 0, 0))
                 screen.blit(koniec_gry_text, (self.x, self.y + 40))
-
-    

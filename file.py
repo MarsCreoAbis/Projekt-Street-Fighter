@@ -1,14 +1,14 @@
 
 import pygame
 from  characters import *
-from gui import Healtbar
+from gui import *
 import time
 
 class GameRound():
     def __init__(self, ch1, ch2):
         self.points_p1 = self.points_p2 = 0
-        self.cycle_state_p1 = ch1._Character__hit_points
-        self.cycle_state_p2 = ch2._Character__hit_points
+        self.cycle_state_p1 = ch1.get_hit_points()
+        self.cycle_state_p2 = ch2.get_hit_points()
         self.last_hit_time_p1 = None
         self.last_hit_time_p2 = None
         self.p1_combo = 0
@@ -17,18 +17,18 @@ class GameRound():
 
     def checkCycle(self):
         self.cycle_time = time.time()
-        if (d := self.cycle_state_p1 - ch1._Character__hit_points) != 0:
+        if (d := self.cycle_state_p1 - ch1.get_hit_points()) != 0:
             self.points_p2 += 1 + int(float(f'{d}.{d}')*(0.30*self.p2_combo))
-            self.cycle_state_p1 = ch1._Character__hit_points
+            self.cycle_state_p1 = ch1.get_hit_points()
             if self.last_hit_time_p2 is None:
                 self.last_hit_time_p2 = time.time()
             time_now = time.time()
             if time_now - self.last_hit_time_p2 < 1.7:
                 self.p2_combo +=1
             self.last_hit_time_p2 = time_now
-        if (d := self.cycle_state_p2 - ch2._Character__hit_points) != 0:
+        if (d := self.cycle_state_p2 - ch2.get_hit_points()) != 0:
             self.points_p1 += 1 + int(float(f'{d}.{d}')*(0.30*self.p1_combo))
-            self.cycle_state_p2 = ch2._Character__hit_points
+            self.cycle_state_p2 = ch2.get_hit_points()
             if self.last_hit_time_p1 is None:
                 self.last_hit_time_p1 = time.time()
             time_now = time.time()
@@ -71,6 +71,7 @@ red = (128, 0, 0)
 
 healtbar_1 = Healtbar(ch1.get_max_hit_points(), 50, 50, "player_1", "player_1.jpg")
 healtbar_2 = Healtbar(ch2.get_max_hit_points(), 880, 50, "player_2","player_2.jpg")
+timer = interfejs(ch1.get_max_hit_points(),ch2.get_max_hit_points(),500, 30)
 
 
 #############################################
@@ -78,7 +79,7 @@ healtbar_2 = Healtbar(ch2.get_max_hit_points(), 880, 50, "player_2","player_2.jp
 
 button_color = (0, 255, 0)
 
-font = pygame.font.Font(None, 36)
+font = pygame.font.Font('freesansbold.ttf', 36)
 round = GameRound(ch1, ch2)
 while running:
     for event in pygame.event.get():
@@ -102,12 +103,14 @@ while running:
 
 #######################################################
 # wyzywa sie metoda update, ktora odpowiada za zycie gracza
-    healtbar_1.update(ch1.get_hit_points(), ch2.get_hit_points())
-    healtbar_2.update(ch2.get_hit_points(), ch1.get_hit_points())
+    healtbar_1.update(ch1.get_hit_points())
+    healtbar_2.update(ch2.get_hit_points())
+    timer.update(ch1.get_hit_points(),ch2.get_hit_points())
 
 # tworzy sie pasek z zyciem gracza
-    healtbar_1.draw_healthbar(screen)
-    healtbar_2.draw_healthbar(screen)
+    healtbar_1.draw(screen)
+    healtbar_2.draw(screen)
+    timer.draw(screen)
 
 #######################################################
     # punktacja - mozna przerzucic do GUI - wszytsko sie bedzei naliczac, wystarczy zmnniejszyc hp postaci, w jakikolwiek sposób, im więcej zada na raz, tym więcej punktów dostanie
@@ -124,23 +127,25 @@ while running:
         tekst = font.render(str(f'COMBO: {round.p1_combo}'), True, '#ffffff')
         screen.blit(tekst, (880, 120))
 
-    if min(ch1.get_hit_points(), ch2.get_hit_points()) <= 0:
+    if timer.winner:
         # "Koniec gry"
         end_game_text = font.render("Koniec gry", True, (255, 0, 0))
-        screen.blit(end_game_text, (screen_width // 2 - end_game_text.get_width() // 2, screen_height // 2 - end_game_text.get_height() // 2))
+        screen.blit(end_game_text, (screen.get_width() // 2 - end_game_text.get_width() // 2, screen.get_height() // 2 - end_game_text.get_height() // 2))
 
        
-        button_rect = pygame.Rect(screen_width // 2 - 100, screen_height // 2 + 50, 200, 50)
+        button_rect = pygame.Rect(screen.get_width() // 2 - 100, screen.get_height() // 2 + 50, 200, 50)
         pygame.draw.rect(screen, button_color, button_rect)
         button_text = font.render("Od nowa", True, (0, 0, 0))
-        screen.blit(button_text, (screen_width // 2 - button_text.get_width() // 2, screen_height // 2 + 65 - button_text.get_height() // 2))
+        screen.blit(button_text, (screen.get_width() // 2 - button_text.get_width() // 2, screen.get_height() // 2 + 65 - button_text.get_height() // 2))
 
         
         mouse_pos = pygame.mouse.get_pos()
-        if event.type == pygame.MOUSEBUTTONDOWN and button_rect.collidepoint(mouse_pos):
+        if event.type == pygame.MOUSEBUTTONDOWN and button_rect.collidepoint(mouse_pos): 
             
+            timer = interfejs(ch1.get_max_hit_points(),ch2.get_max_hit_points(),500, 30)
             ch2._Character__hit_points = ch2.get_max_hit_points()  
             ch1._Character__hit_points = ch1.get_max_hit_points() 
+
     else:
         keys = pygame.key.get_pressed()
         if not ch1.get_stunned():

@@ -179,10 +179,10 @@ class Character(Movable):
         self.__attacking = 15 - self.__speed
         self.tire(10)
         if self.__facing == 'right':
-            position[0] = position[0] + int(self.__width/2+10)
+            position[0] = position[0] + int(self.__width/2)
             kick = pygame.Rect(position[0],position[1] , 30, 15)
         else:
-            position[0] = position[0] - int(self.__width/2+10)
+            position[0] = position[0] - int(self.__width/2)
             kick = pygame.Rect(position[0]-30,position[1], 30, 15)
         self.attacks.append(kick)
         self.__sprite_id = 3
@@ -194,10 +194,10 @@ class Character(Movable):
         self.__attacking = 15 - self.__speed
         self.tire(10)
         if self.__facing == 'right':
-            position[0] = position[0] + int(self.__width/2+10)
+            position[0] = position[0] + int(self.__width/2)
             punch = pygame.Rect(position[0],position[1] , 30, 15)
         else:
-            position[0] = position[0] - int(self.__width/2+10)
+            position[0] = position[0] - int(self.__width/2)
             punch = pygame.Rect(position[0]-30,position[1], 30, 15)
         self.attacks.append(punch)
         self.__sprite_id = 2
