@@ -62,9 +62,9 @@ class interfejs():
 
 
             # chyba wygrywa ten, kto ma wiecej zdrowia na koniec rundy
-            if self.max_health_player1//self.current_health_player1 < self.max_health_player2//self.current_health_player2:
+            if self.max_health_player1//(self.current_health_player1+1) < self.max_health_player2//(self.current_health_player2+1):
                 self.winner = "Player 1 wygrał"
-            elif self.max_health_player1//self.current_health_player1 > self.max_health_player2//self.current_health_player2:
+            elif self.max_health_player1//(self.current_health_player1+1) > self.max_health_player2//(self.current_health_player2+1):
                 self.winner = "Player 2 wygrał"
             else:
                 self.winner = "Remis"
